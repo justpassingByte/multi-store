@@ -13,3 +13,49 @@ export interface Billboards {
     createAt?: Timestamp,
     updateAt?: Timestamp
 }
+export interface Categories {
+    id:string,
+    billboardId:string,
+    billboardLabel:string,
+    name:string,
+    createAt?: Timestamp,
+    updateAt?: Timestamp
+}
+export interface Sizes {
+    id:string,
+    name:string,
+    value:string,
+    createAt?: Timestamp,
+    updateAt?: Timestamp
+}
+export interface Kitchens {
+    id:string,
+    name:string,
+    value:string,
+    createAt?: Timestamp,
+    updateAt?: Timestamp
+}
+export interface Cuisines {
+    id:string,
+    name:string,
+    value:string,
+    createAt?: Timestamp,
+    updateAt?: Timestamp
+}
+export interface Products {
+    id: string; 
+    name: string; 
+    price: number; 
+    qty?: string; 
+    images: {url: string}[]; 
+    isFeature: boolean; 
+    isArchieve: boolean; 
+    category: string; 
+    size:string,
+    kitchen:string,
+    cuisine: string,
+    date: string,
+    createAt?:Timestamp,
+    updateAt?:Timestamp,
+  }
+  

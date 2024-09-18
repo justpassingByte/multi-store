@@ -12,14 +12,14 @@ interface DashBoardLayoutProps {
 
 const DashBoardLayout = async ({ children, params }: DashBoardLayoutProps) => {
   const userAuth = auth();
-  console.log("User Auth:", userAuth); // Log the full auth object
+  console.log("User Auth:", userAuth); 
   const { userId } = userAuth;
   
   if (!userId) {
     return redirect("/sign-in");
   }
 
-  console.log("Fetching store with storeId:", params.storeId);
+  console.log("Fetching store :", params.storeId);
   const storeSnap = await getDocs(
     query(
       collection(db, "stores"),
@@ -37,7 +37,8 @@ const DashBoardLayout = async ({ children, params }: DashBoardLayoutProps) => {
     console.log("No store found for this user and storeId");
     return redirect("/"); 
   }
-
+  console.log("Store:" + store);
+  
   return (
     <>
       <Navbar/>

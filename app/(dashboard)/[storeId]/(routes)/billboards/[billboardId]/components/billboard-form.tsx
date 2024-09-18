@@ -10,9 +10,11 @@ import Heading from "@/components/ui/heading"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
+import { storage } from "@/lib/firebase"
 import { Billboards } from "@/type-db"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
+import { deleteObject, ref } from "firebase/storage"
 import { Trash } from "lucide-react"
 import { useParams, useRouter } from "next/navigation"
 import { useState } from "react"
@@ -49,42 +51,30 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
         console.log("Form data:", data);
 
         try {
-            setIsLoading(true)
-            const res = await axios.patch(`/api/billboards/${params.BillboardId}`, data)
-            console.log("API Response:", res);
-            toast.success("Billboard updated")
-            router.refresh()
+            if(initialData){
+                await axios.patch(`/api/${params.storeId}/billboards/${params.billboardId}`, data)
+                toast.success("Bill board updated")
+                router.push(`/${params.storeId}/billboards`)
+            }else{
+                setIsLoading(true)
+                await axios.post(`/api/${params.storeId}/billboards`, data)
+                toast.success("Bill board created")
+                router.push(`/${params.storeId}/billboards`)
+            }
+            
         } catch (error) {
             console.log("Error:", error);
             toast.error("Something went wrong")
         } finally {
-            setIsLoading(false)
-        }
-    }
-    const onDelete = async () => {
-        try {
-            setIsLoading(true)
-            const res = await axios.delete(`/api/billboards/${params.BillboardId}`)
-
-            toast.success("Billboard removed")
             router.refresh()
-            router.push('/')
-        } catch (error) {
-
-            toast.error("Something went wrong")
-        } finally {
             setIsLoading(false)
-            setOpen(false)
         }
     }
+    
    
     return (
         <>
-            <AlertModal
-                isOpen={open} onClose={() => setOpen(false)}
-                onConfirm={onDelete} loading={isLoading}
-                
-            />
+           
             <div className="flex items-center justify-center">
                 <Heading title={title} description={description} />
                 {initialData && (
@@ -97,7 +87,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-8">
                     
-                    <FormField control={form.control} name='label' render={({ field }) => (
+                    <FormField control={form.control} name='imageUrl' render={({ field }) => (
                         <FormItem>
                             <FormLabel> Billboard Image</FormLabel>
                             <FormControl>
@@ -117,7 +107,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
                                         disabled={isLoading}
                                         placeholder={'Your Billboard name...'}
                                         {...field}
-
+                        
                                     />
                                 </FormControl>
                                 <FormMessage />

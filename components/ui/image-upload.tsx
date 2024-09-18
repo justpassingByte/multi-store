@@ -1,12 +1,13 @@
 "use client"
 
 import { storage } from "@/lib/firebase"
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
-import { ImagePlus } from "lucide-react"
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
+import { ImagePlus, Trash2, X } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import {PuffLoader} from 'react-spinners'
+import { Button } from "./button"
 interface ImageUploadsProps{
     disable? : boolean,
     onChange : (value: string) => void,
@@ -47,6 +48,13 @@ export const ImageUpload =({disable, onChange, onRemove, value}: ImageUploadsPro
             )
     } 
        
+    function onDelete(url: string): void {
+       onRemove(url)
+       deleteObject(ref(storage,url)).then(() =>{
+        toast.success("Image removed")
+       })
+    }
+
     return (
     <div>
         {value && value.length > 0 ? 
@@ -63,6 +71,13 @@ export const ImageUpload =({disable, onChange, onRemove, value}: ImageUploadsPro
                             alt="Billboard img"
                             src={url}
                         />
+                        <div className="absolute z-10 top-2 right-2">
+                            <Button variant={"destructive"} size={"icon"} type="button"
+                                onClick={()=> onDelete(url)}
+                            > 
+                            <X className="w-4 h4"/>
+                            </Button>
+                        </div>
                     </div>
                 ))}
             </div>
