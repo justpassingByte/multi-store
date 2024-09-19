@@ -14,7 +14,7 @@ const CategoryPage = async ({
         doc(db, 'stores', params.storeId, 'categories', params.categoryId)
     );
 
-    const category = categoryDoc.data() as Categories | undefined;
+    const category = categoryDoc.data() as Categories;
 
     // Fetch all billboards
     const billboardsSnapshot = await getDocs(
