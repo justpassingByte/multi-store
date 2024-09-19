@@ -206,7 +206,7 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading} className="w-full">
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}">
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select category" />
                                         </SelectTrigger>
@@ -226,7 +226,7 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
                             <FormItem>
                                 <FormLabel>Kitchen</FormLabel>
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading} className="w-full">
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select kitchen" />
                                         </SelectTrigger>
@@ -246,7 +246,7 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
                             <FormItem>
                                 <FormLabel>Cuisine</FormLabel>
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading} className="w-full">
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select cuisine" />
                                         </SelectTrigger>
