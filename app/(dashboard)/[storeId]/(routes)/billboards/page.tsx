@@ -4,6 +4,7 @@ import BillBoardClient from './components/client';
 import { BillBoardColumn } from './components/column';
 import { format, isValid } from 'date-fns';
 import Loading from '@/components/ui/loading';
+import { Timestamp } from 'firebase/firestore'; // Adjust import based on your setup
 
 const BillBoards = ({ params }: { params: { storeId: string } }) => {
   const [billBoardsData, setBillBoardsData] = useState<BillBoardColumn[]>([]);
@@ -19,29 +20,28 @@ const BillBoards = ({ params }: { params: { storeId: string } }) => {
 
         const formattedBillBoards = data.map(item => {
           let date: Date | null = null;
-        
-          if (item.createAt && typeof item.createAt.seconds === 'number') {
-            // Convert seconds to milliseconds and create a new Date object
+
+          // Check if createAt is a Timestamp
+          if (item.createAt instanceof Timestamp) {
             date = new Date(item.createAt.seconds * 1000);
           } else if (typeof item.createAt === 'string') {
             date = new Date(item.createAt);
           }
-        
+          
           if (!date || !isValid(date)) {
             console.error("Invalid date value:", date);
             return { ...item, createAt: 'Invalid date' }; 
           }
-        
+          
           // Use a shorter date format
           const formattedDate = format(date, 'MM/dd/yyyy');
-        
+          
           return {
             ...item,
             createAt: formattedDate,
           };
         });
         
-
         setBillBoardsData(formattedBillBoards);
         setLoading(false);
       } catch (error) {
