@@ -206,7 +206,7 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
                             <FormItem>
                                 <FormLabel>Category</FormLabel>
                                 <FormControl>
-                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}">
+                                    <Select onValueChange={field.onChange} value={field.value} disabled={isLoading}>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select category" />
                                         </SelectTrigger>
