@@ -54,7 +54,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
             }else{
                 setIsLoading(true)
                 await axios.post(`/api/${params.storeId}/billboards`, data)
-                toast.success("Bill board created")
+                toast.success(`${toastMessage}`)
                 router.push(`/${params.storeId}/billboards`)
             }
             
@@ -141,7 +141,7 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
                         )} />
                     </div>
-                    <Button disabled={isLoading} type='submit' size={"sm"}>Save Changes</Button>
+                    <Button disabled={isLoading} type='submit' size={"sm"}>{action}</Button>
                 </form>
             </Form>
             <Separator />
