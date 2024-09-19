@@ -16,7 +16,7 @@ export type ProductsColumn = {
   size: string
   kitchen: string
   cuisine: string
-  date: string // or use Date if you prefer
+  date: string 
 }
 
 const formatPrice = (price: number) => {
@@ -32,15 +32,7 @@ export const columns: ColumnDef<ProductsColumn>[] = [
   {
     accessorKey: "name",
     cell: ({ getValue }) => getValue<string>(),
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
+    header: () => "Name"
   },
   {
     accessorKey: "price",

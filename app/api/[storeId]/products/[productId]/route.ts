@@ -1,7 +1,7 @@
 import { db, storage } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
-import { addDoc, collection, deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { addDoc, and, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
@@ -99,7 +99,7 @@ export const DELETE = async (req: Request, { params }: { params: { storeId: stri
     }
     // Delete all product images
     const images = productDoc.data()?.images
-    if(images && Array.isArray(images)){
+    if (images && Array.isArray(images)) {
       await Promise.all(
         images.map(async (image) => {
           const imageRef = ref(storage, image.url);
@@ -117,22 +117,3 @@ export const DELETE = async (req: Request, { params }: { params: { storeId: stri
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
-export const GET = async (
-  req:Request, {params}: {params: {storeId: string, productId:string}}
-) =>{
-  try {
-    if(!params.storeId){
-      return new NextResponse("Store Id is missing",{status:400})
-    }
-    if(!params.productId){
-      return new NextResponse("Product Id is missing",{status:400})
-    }
-    const product = (await getDoc(
-      doc(db,"stores",params.storeId,"products",params.productId)
-    )).data() as Products
-    return NextResponse.json(product)
-  } catch (error) {
-    console.log(`PRODUCT_GET:${error}`);
-    return new NextResponse("Internal server error",{status:500})
-  }
-}

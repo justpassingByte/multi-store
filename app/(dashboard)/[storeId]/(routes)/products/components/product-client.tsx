@@ -36,11 +36,11 @@ const ProductClient = ({data}: ProductClientProps) => {
     <DataTable searchKey="name" columns={columns} data={data}/>
     <Heading title="API" description="API calls for Product"/>
     <Separator/>
-    <ApiAlert title="GET" description={`${origin}/api/${params.storeId}/product/`} variant="public"/>
-    <ApiAlert title="GET" description={`${origin}/api/${params.storeId}/product/productId`} variant="public"/>
-    <ApiAlert title="POST" description={`${origin}/api/${params.storeId}/product/`} variant="admin"/>
-    <ApiAlert title="PATCH" description={`${origin}/api/${params.storeId}/product/productId`} variant="admin"/>
-    <ApiAlert title="DELETE" description={`${origin}/api/${params.storeId}/product/productId`} variant="admin"/>
+    <ApiAlert title="GET" description={`${origin}/api/${params.storeId}/products/`} variant="public"/>
+    <ApiAlert title="GET" description={`${origin}/api/${params.storeId}/products/productId`} variant="public"/>
+    <ApiAlert title="POST" description={`${origin}/api/${params.storeId}/products/`} variant="admin"/>
+    <ApiAlert title="PATCH" description={`${origin}/api/${params.storeId}/products/productId`} variant="admin"/>
+    <ApiAlert title="DELETE" description={`${origin}/api/${params.storeId}/products/productId`} variant="admin"/>
     </>
   )
 }
