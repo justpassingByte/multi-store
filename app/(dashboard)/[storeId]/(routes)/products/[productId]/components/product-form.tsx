@@ -84,7 +84,7 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
             toast.success(toastMessage);
             router.push(`/${params.storeId}/products`);
         } catch (error) {
-            console.error("Error during submission:", error.response ? error.response.data : error.message);
+            console.error("Error during submission:", error);
             toast.error("Something went wrong");
         } finally {
             console.log("Form submission complete");
