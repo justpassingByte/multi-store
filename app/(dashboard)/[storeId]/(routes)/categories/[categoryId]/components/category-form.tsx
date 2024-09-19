@@ -1,21 +1,17 @@
 "use client"
 
-import { useOrigin } from "@/app/hooks/use-origin";
 import { AlertModal } from "@/components/modal/alert-modal";
-import ApiAlert from "@/components/ui/api-alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
-import { ImageUpload } from "@/components/ui/image-upload";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { storage } from "@/lib/firebase";
 import { Billboards, Categories } from "@/type-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { deleteObject, ref } from "firebase/storage";
 import { Trash } from "lucide-react";
+
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,7 +37,6 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
     const params = useParams();
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const origin = useOrigin();
     const title = initialData ? "Edit Category" : "Create Category";
     const description = initialData ? "Edit a Category" : "Add a new Category";
     const toastMessage = initialData ? "Category updated" : "Category created";
@@ -87,9 +82,42 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
             setIsLoading(false);
         }
     };
+    const onDelete = async () => {
+    
+        
+        try {
+            setIsLoading(true);
+  
+            // Log the API call to delete the categories in Firestore
+            console.log(`Attempting to delete from Firestore: /api/${params.storeId}/categorys/${params.categoryId}`);
+            
+            await axios.delete(`/api/${params.storeId}/categories/${params.categoryId}`);
+  
+            console.log("Firestore document deleted successfully");
+  
+            toast.success("Bill board removed");
+            location.reload()
+            // Redirect after deletion
+            router.push(`/${params.storeId}/categories`);
+        } catch (error) {
+            console.error("Error during deletion:", error);
+            toast.error("Something went wrong"+ error);
+        } finally {
+            setIsLoading(false);
+            setOpen(false);
+        }
+    };
+   
     return (
         <>
-            <div className="flex items-center justify-center">
+           
+           {open && (
+            <AlertModal
+                isOpen={open} onClose={() => setOpen(false)}
+                onConfirm={onDelete} loading={isLoading}               
+            />
+           )}
+           <div className="flex items-center justify-center">
                 <Heading title={title} description={description} />
                 {initialData && (
                     <Button disabled={isLoading} variant={"destructive"} size={"icon"} onClick={() => setOpen(true)}>
@@ -135,7 +163,7 @@ const CategoryForm = ({ initialData, billboards }: CategoryFormProps) => {
                                         </SelectContent>
                                     </Select>
                                     <FormDescription>
-                                        Choose your bill board from the list.
+                                        {description}
                                     </FormDescription>
                                     <FormMessage />
                                 </FormItem>

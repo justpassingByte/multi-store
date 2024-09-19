@@ -1,20 +1,21 @@
 "use client"
 
-import { useOrigin } from "@/app/hooks/use-origin";
+
 import { AlertModal } from "@/components/modal/alert-modal";
-import ApiAlert from "@/components/ui/api-alert";
+
+
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import Heading from "@/components/ui/heading";
-import { ImageUpload } from "@/components/ui/image-upload";
+
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Separator } from "@/components/ui/separator";
-import { storage } from "@/lib/firebase";
-import { Billboards, Categories, Sizes } from "@/type-db";
+
+import {Sizes } from "@/type-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { deleteObject, ref } from "firebase/storage";
+
 import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,7 +25,7 @@ import { z } from "zod";
 
 interface SizeFormProps {
     initialData: Sizes;
-    billboards: Billboards[];
+    
 }
 
 const formSchema = z.object({
@@ -32,7 +33,7 @@ const formSchema = z.object({
     value: z.string().min(1),
 });
 
-const SizeForm = ({ initialData, billboards }: SizeFormProps) => {
+const SizeForm = ({ initialData}: SizeFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData
@@ -41,7 +42,7 @@ const SizeForm = ({ initialData, billboards }: SizeFormProps) => {
     const params = useParams();
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const origin = useOrigin();
+   
     const title = initialData ? "Edit Size" : "Create Size";
     const description = initialData ? "Edit a Size" : "Add a new Size";
     const toastMessage = initialData ? "Size updated" : "Size created";
@@ -80,8 +81,39 @@ const SizeForm = ({ initialData, billboards }: SizeFormProps) => {
             setIsLoading(false);
         }
     };
+    const onDelete = async () => {
+    
+        
+        try {
+            setIsLoading(true);
+  
+            // Log the API call to delete the size in Firestore
+            console.log(`Attempting to delete from Firestore: /api/${params.storeId}/sizes/${params.sizesId}`);
+            
+            await axios.delete(`/api/${params.storeId}/size/${params.sizesId}`);
+  
+            console.log("Firestore document deleted successfully");
+  
+            toast.success("Bill board removed");
+            location.reload()
+            // Redirect after deletion
+            router.push(`/${params.storeId}/size`);
+        } catch (error) {
+            console.error("Error during deletion:", error);
+            toast.error("Something went wrong"+ error);
+        } finally {
+            setIsLoading(false);
+            setOpen(false);
+        }
+    };
     return (
         <>
+         {open && (
+            <AlertModal
+                isOpen={open} onClose={() => setOpen(false)}
+                onConfirm={onDelete} loading={isLoading}               
+            />
+           )}
             <div className="flex items-center justify-center">
                 <Heading title={title} description={description} />
                 {initialData && (

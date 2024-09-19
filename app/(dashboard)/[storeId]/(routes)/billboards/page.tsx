@@ -4,7 +4,6 @@ import BillBoardClient from './components/client';
 import { BillBoardColumn } from './components/column';
 import { format, isValid } from 'date-fns';
 import Loading from '@/components/ui/loading';
-import { Timestamp } from 'firebase/firestore';
 
 const BillBoards = ({ params }: { params: { storeId: string } }) => {
   const [billBoardsData, setBillBoardsData] = useState<BillBoardColumn[]>([]);

@@ -5,9 +5,9 @@ import { Copy, MoreVertical, RefreshCw, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modal/alert-modal";
 import toast from "react-hot-toast";
-import { deleteObject, ref } from "firebase/storage";
+
 import axios from "axios";
-import { storage } from "@/lib/firebase";
+
 import { useState } from "react";
 
 interface CellActionProps{

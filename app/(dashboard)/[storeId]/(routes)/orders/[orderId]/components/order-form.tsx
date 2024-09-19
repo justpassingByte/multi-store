@@ -79,8 +79,40 @@ const OrderForm = ({ initialData, billboards }: OrderFormProps) => {
             setIsLoading(false);
         }
     };
+    const onDelete = async () => {
+        
+        try {
+            setIsLoading(true);
+  
+            // Log the API call to delete the categories in Firestore
+            console.log(`Attempting to delete from Firestore: /api/${params.storeId}/kitchens/${params.kitchenId}`);
+            
+            await axios.delete(`/api/${params.storeId}/cuisines/${params.kitchenId}`);
+  
+            console.log("Firestore document deleted successfully");
+  
+            toast.success("Bill board removed");
+            location.reload()
+            // Redirect after deletion
+            router.push(`/${params.storeId}/kitchens`);
+        } catch (error) {
+            console.error("Error during deletion:", error);
+            toast.error("Something went wrong"+ error);
+        } finally {
+            setIsLoading(false);
+            setOpen(false);
+        }
+    };
+   
     return (
         <>
+           
+           {open && (
+            <AlertModal
+                isOpen={open} onClose={() => setOpen(false)}
+                onConfirm={onDelete} loading={isLoading}               
+            />
+           )}
             <div className="flex items-center justify-center">
                 <Heading title={title} description={description} />
                 {initialData && (
