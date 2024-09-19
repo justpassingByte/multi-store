@@ -50,7 +50,7 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
 
     return NextResponse.json({ productId, ...productData });
   } catch (error) {
-    console.error(`PRODUCT_POST_ERROR: ${error.message}`);
+    console.error(`PRODUCT_POST_ERROR:${error}`,);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

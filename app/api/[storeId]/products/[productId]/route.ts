@@ -54,7 +54,7 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
     const updatedProduct = (await getDoc(productRef)).data() as Products;
     return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error(`PRODUCT_PATCH_ERROR: ${error.message}`);
+    console.error(`PRODUCT_PATCH_ERROR: ${error}`,);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
