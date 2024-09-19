@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
 import { CellAction } from "./cell-action"
 
-// Define the type for your product columns
+
 export type ProductsColumn = {
+  createAt: string
   id: string
   name: string
   price: number

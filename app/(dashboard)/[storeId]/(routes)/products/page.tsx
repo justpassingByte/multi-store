@@ -1,8 +1,13 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
 import { format, isValid } from 'date-fns';
-import { ProductsColumn } from './components/column';import ProductClient from './components/product-client';
+import { ProductsColumn } from './components/column';
+import ProductClient from './components/product-client';
 import Loading from '@/components/ui/loading';
+
+// Import Timestamp from Firebase Firestore if using Firebase
+import { Timestamp } from 'firebase/firestore';
+
 const ProductsPage = ({ params }: { params: { storeId: string } }) => {
   const [productsData, setProductsData] = useState<ProductsColumn[]>([]);
   const [loading, setLoading] = useState(true);
@@ -11,30 +16,30 @@ const ProductsPage = ({ params }: { params: { storeId: string } }) => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`/api/${params.storeId}/products`);
-        const data: ProductsColumn[] = await response.json(); 
+        const data: ProductsColumn[] = await response.json();
         console.log("Fetched Products data:", data);
 
         const formattedProducts = data.map(item => {
           let date: Date | null = null;
-        
-          if (item.createAt && typeof item.createAt.seconds === 'number') {
-            // Convert seconds to milliseconds and create a new Date object
-            date = new Date(item.createAt.seconds * 1000);
+
+          // Type guard for Timestamp
+          if (item.createAt && typeof item.createAt === 'object' && 'seconds' in item.createAt) {
+            date = new Date((item.createAt as Timestamp).seconds * 1000);
           } else if (typeof item.createAt === 'string') {
             date = new Date(item.createAt);
           }
-        
+
           if (!date || !isValid(date)) {
             console.error("Invalid date value:", date);
             return { ...item, createAt: 'Invalid date' }; 
           }
-        
+
           // Use a shorter date format
           const formattedDate = format(date, 'MM/dd/yyyy');
-        
+
           return {
             ...item,
-            date: formattedDate,
+            createAt: formattedDate, 
           };
         });
 
