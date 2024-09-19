@@ -36,7 +36,7 @@ export const PATCH = async (req: Request, {params}: {params:{storeId: string, bi
         const store = await getDoc(doc(db,"stores", params.storeId))
 
         if (store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authourized access",{status:400})
             }

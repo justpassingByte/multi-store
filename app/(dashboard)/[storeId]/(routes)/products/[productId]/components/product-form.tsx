@@ -1,6 +1,7 @@
 "use client"
 
-import { useOrigin } from "@/app/hooks/use-origin";
+
+import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -9,7 +10,7 @@ import { ImagesUpload } from "@/components/ui/images-upload";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Billboards, Categories, Products, Kitchens, Cuisines, Sizes } from "@/type-db";
+import { Categories, Products, Kitchens, Cuisines, Sizes } from "@/type-db";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Trash } from "lucide-react";
@@ -21,7 +22,6 @@ import { z } from "zod";
 
 interface ProductFormProps {
     initialData: Products;
-    billboards: Billboards[];
     categories: Categories[];
     kitchens: Kitchens[];
     cuisines: Cuisines[];
@@ -40,7 +40,7 @@ const formSchema = z.object({
     images: z.object({ url: z.string() }).array()
 });
 
-const ProductForm = ({ initialData, billboards, categories, kitchens, cuisines, sizes }: ProductFormProps) => {
+const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: ProductFormProps) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
@@ -58,7 +58,6 @@ const ProductForm = ({ initialData, billboards, categories, kitchens, cuisines, 
     const params = useParams();
     const router = useRouter();
     const [open, setOpen] = useState(false);
-    const origin = useOrigin();
     const title = initialData ? "Edit Product" : "Create Product";
     const description = initialData ? "Edit a Product" : "Add a new Product";
     const toastMessage = initialData ? "Product updated" : "Product created";
@@ -94,8 +93,40 @@ const ProductForm = ({ initialData, billboards, categories, kitchens, cuisines, 
         }
     };
     
+    const onDelete = async () => {
+        
+        try {
+            setIsLoading(true);
+  
+            // Log the API call to delete the categories in Firestore
+            console.log(`Attempting to delete from Firestore: /api/${params.storeId}/cuisines/${params.cuisineId}`);
+            
+            await axios.delete(`/api/${params.storeId}/cuisines/${params.cuisineId}`);
+  
+            console.log("Firestore document deleted successfully");
+  
+            toast.success("Cuisineremoved");
+            location.reload()
+            // Redirect after deletion
+            router.push(`/${params.storeId}/cuisines`);
+        } catch (error) {
+            console.error("Error during deletion:", error);
+            toast.error("Something went wrong"+ error);
+        } finally {
+            setIsLoading(false);
+            setOpen(false);
+        }
+    };
+   
     return (
         <>
+           
+           {open && (
+            <AlertModal
+                isOpen={open} onClose={() => setOpen(false)}
+                onConfirm={onDelete} loading={isLoading}               
+            />
+           )}
             <div className="flex items-center justify-center">
                 <Heading title={title} description={description} />
                 {initialData && (

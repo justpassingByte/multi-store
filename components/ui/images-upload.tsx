@@ -1,7 +1,7 @@
 "use client"
 import { storage } from "@/lib/firebase"
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
-import { ImagePlus, Trash2, X } from "lucide-react"
+import { ImagePlus, X } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -15,7 +15,7 @@ interface ImagesUploadsProps {
   value: string[]
 }
 
-export const ImagesUpload = ({ disable, onChange, onRemove, value }: ImagesUploadsProps) => {
+export const ImagesUpload = ({ onChange, onRemove, value }: ImagesUploadsProps) => {
   const [isMounted, setIsMounted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [progress, setProgress] = useState<number>(0)

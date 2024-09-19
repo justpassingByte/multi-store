@@ -1,6 +1,5 @@
 import { BillBoardColumn } from "@/app/(dashboard)/[storeId]/(routes)/billboards/components/column";
 import { db } from "@/lib/firebase";
-import { Billboards } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
 import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
@@ -31,7 +30,7 @@ export const POST = async (req: Request, {params}: {params:{storeId: string}}) =
         const store = await getDoc(doc(db,"stores", params.storeId))
 
         if (store.exists()){
-            let storeData = store.data()
+            const storeData = store.data()
             if(storeData?.userId !== userId){
                 return new NextResponse("Un-Authourized access",{status:400})
             }
@@ -68,7 +67,7 @@ export const GET = async (req: Request, { params }: { params: { storeId: string 
       const billboardSnapshot = await getDocs(collection(doc(db, 'stores', params.storeId), 'billboards'));
       const billboardData: BillBoardColumn[] = billboardSnapshot.docs.map(doc => ({
         id: doc.id, // Ensure you get the document ID
-        ...doc.data() as Omit<BillBoardColumn, 'id'> // Spread remaining data
+        ...doc.data() as Omit<BillBoardColumn, 'id'> 
       }));
   
       return NextResponse.json(billboardData);

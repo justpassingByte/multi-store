@@ -1,6 +1,5 @@
 "use client"
 
-import { useOrigin } from "@/app/hooks/use-origin";
 import { AlertModal } from "@/components/modal/alert-modal";
 
 import { Button } from "@/components/ui/button";

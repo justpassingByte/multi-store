@@ -1,7 +1,5 @@
 
 
-import { ProductsColumn } from "@/app/(dashboard)/[storeId]/(routes)/products/components/column";
-
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
@@ -69,7 +67,7 @@ export const GET = async (
     const productRef = collection(doc(db, "stores", params.storeId), "products")
 
     let productQuery
-    let queryContrains = []
+    const queryContrains = []
     if (searchParams.has("size")) {
       queryContrains.push(where("size", "==", searchParams.get("size")))
     }

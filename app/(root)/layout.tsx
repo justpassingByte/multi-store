@@ -21,7 +21,7 @@ const SetupLayout = async ({ children }: SetupLayoutProp) => {
     query(collection(db, "stores"), where("userId", "==", userId))
   );
 
-  let store = null as any;
+  let store: Store | null = null;
   storeSnap.forEach(doc => {
     store = doc.data() as Store;
   });

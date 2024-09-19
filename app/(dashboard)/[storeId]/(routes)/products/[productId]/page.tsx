@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { Billboards, Categories, Cuisines, Kitchens, Products, Sizes } from '@/type-db';
+import { Categories, Cuisines, Kitchens, Products, Sizes } from '@/type-db';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import React from 'react';
 import ProductForm from './components/product-form';
@@ -15,16 +15,6 @@ const ProductPage = async ({
     );
 
     const product = productDoc.data() as Products;
-
-    // Fetch all billboards
-    const billboardsSnapshot = await getDocs(
-        collection(db, 'stores', params.storeId, 'billboards')
-    );
-
-    const billboards = billboardsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-    })) as Billboards[];
 
     // Fetch all categories
     const categoriesSnapshot = await getDocs(
@@ -71,7 +61,6 @@ const ProductPage = async ({
                 {/* Pass the plain objects to productForm */}              
                 <ProductForm 
                     initialData={product} 
-                    billboards={billboards} 
                     categories={categories} 
                     kitchens={kitchens} 
                     cuisines={cuisines} 

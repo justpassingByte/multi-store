@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
+import {  collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { Store } from "@/type-db";
 import { deleteObject, ref } from "firebase/storage";
@@ -69,7 +69,7 @@ export const DELETE = async (req: Request, { params }: { params: { storeId: stri
       const orderItemArray = orderDoc.data().orderItems
       if (orderItemArray && Array.isArray(orderItemArray)) {
         await Promise.all(
-          orderItemArray.map(async (orderItem) => {
+          orderItemArray.map(async () => {
             const imagesArray = orderDoc.data().images
             if (imagesArray && Array.isArray(imagesArray)) {
               imagesArray.map(async (image) => {

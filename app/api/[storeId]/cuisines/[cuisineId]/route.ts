@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { Billboards, Categories, Cuisines } from "@/type-db";
+import {  Cuisines } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
 import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";

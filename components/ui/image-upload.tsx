@@ -15,7 +15,7 @@ interface ImageUploadsProps{
     value: string[]
 }
 
-export const ImageUpload =({disable, onChange, onRemove, value}: ImageUploadsProps) =>{
+export const ImageUpload =({ onChange, onRemove, value}: ImageUploadsProps) =>{
     const [isMounted, setIsMounted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [progress, setProgress] = useState<number>(0)

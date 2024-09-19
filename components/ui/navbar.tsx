@@ -16,7 +16,7 @@ const Navbar = async () => {
     const storeSnap = await getDocs(
         query(collection(db,"stores"),where("userId","==",userId))
     )
-    let stores = [] as Store[]
+    const stores = [] as Store[]
     storeSnap.forEach((doc)=>{
         stores.push(doc.data() as Store);
     })

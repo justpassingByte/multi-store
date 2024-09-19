@@ -10,7 +10,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { redirect, useRouter } from 'next/navigation'
+import {  useRouter } from 'next/navigation'
 const formSchema = z.object({
     name: z.string().min(3,{message:"Store name should be minimum 3 characters"})
 })

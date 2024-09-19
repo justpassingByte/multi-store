@@ -1,12 +1,12 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+
 import { DataTable } from "@/components/ui/data-table"
 import Heading from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 
-import { Plus } from "lucide-react"
-import { useParams, useRouter } from "next/navigation"
+
+import { useParams } from "next/navigation"
 import { columns, OrdersColumn } from "./column"
 import ApiAlert from "@/components/ui/api-alert"
 
@@ -16,7 +16,6 @@ import ApiAlert from "@/components/ui/api-alert"
     data: OrdersColumn[]
   }
 const OrderClient = ({data}: orderClientProps) => {
-  const router = useRouter()
   const params = useParams()
   return (
     <>

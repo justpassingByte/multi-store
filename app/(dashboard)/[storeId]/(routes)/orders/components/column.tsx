@@ -51,7 +51,7 @@ export const columns: ColumnDef<OrdersColumn>[] = [
   },
   {
     accessorKey: "isPaid",
-    header: ({ column }) => {
+    header: () => {
     return "Paid"
     },
     cell: ({ row }) => (
