@@ -54,13 +54,10 @@ const SettingForm = ({ initialData }: SettingFormProps) => {
             setIsLoading(false)
         }
     }
-    const onDelete = async () => {
-       
-      
+    const onDelete = async () => {     
         try {
             setIsLoading(true)
-             await axios.delete(`/api/stores/${params.storeId}`)
-           
+             await axios.delete(`/api/${params.storeId}`)          
             toast.success("Store removed")
             router.refresh()
             router.push('/')

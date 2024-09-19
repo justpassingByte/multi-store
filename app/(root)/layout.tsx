@@ -20,18 +20,18 @@ const SetupLayout = async ({ children }: SetupLayoutProp) => {
     query(collection(db, "stores"), where("userId", "==", userId))
   );
 
-  let store: Store | null = null;
+  let store = null as any;
   storeSnap.forEach(doc => {
     // Combine doc.id with doc.data()
-    const data = doc.data();
-    store = { ...data, id: doc.id } as Store;
+    store = doc.data() as Store
+    
   });
 
   console.log(store);
 
-  // if (store && store.id) {
-  //   // return redirect(`/${store.id}`);
-  // }
+  if (store ) {
+    return redirect(`/${store?.id}`);
+  }
 
   return <div>{children}</div>;
 };
