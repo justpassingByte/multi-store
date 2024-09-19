@@ -2,7 +2,7 @@
 
 import { storage } from "@/lib/firebase"
 import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage"
-import { ImagePlus, Trash2, X } from "lucide-react"
+import { ImagePlus, X } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -27,27 +27,30 @@ export const ImageUpload =({ onChange, onRemove, value}: ImageUploadsProps) =>{
         return null
     }
 
-    const onUpload = async (e:any) =>{
-        const file = e.target.files[0]     
-        setIsLoading(true)
-        const uploadTask = uploadBytesResumable(ref(storage,`Images/${Date.now()}-${file.name}`), file,
-        {contentType: file.type})
+    const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setIsLoading(true);
+        const uploadTask = uploadBytesResumable(ref(storage, `Images/${Date.now()}-${file.name}`), file, {
+            contentType: file.type
+        });
+
         uploadTask.on("state_changed",
-             (snapshot)=>{
-                setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-             },
-             (error)=>{
-                toast.error(error.message)
-             },
-             ()=>{
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) =>{
-                    onChange(downloadUrl)
-                    setIsLoading(false)
-                })
-             }
-            )
-    } 
-       
+            (snapshot) => {
+                setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            },
+            (error) => {
+                toast.error(error.message);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+                    onChange(downloadUrl);
+                    setIsLoading(false);
+                });
+            }
+        );
+    };
     function onDelete(url: string): void {
        onRemove(url)
        deleteObject(ref(storage,url)).then(() =>{
