@@ -1,4 +1,3 @@
-// app/(root)/layout.tsx
 import { db } from "@/lib/firebase";
 import { auth } from "@clerk/nextjs/server";
 import { collection, getDocs, query, where } from "firebase/firestore";
@@ -23,13 +22,16 @@ const SetupLayout = async ({ children }: SetupLayoutProp) => {
 
   let store: Store | null = null;
   storeSnap.forEach(doc => {
-    store = doc.data() as Store;
+    // Combine doc.id with doc.data()
+    const data = doc.data();
+    store = { ...data, id: doc.id } as Store;
   });
+
   console.log(store);
-  
-  if (store) {
-    return redirect(`/${store?.id}`);
-  }
+
+  // if (store && store.id) {
+  //   // return redirect(`/${store.id}`);
+  // }
 
   return <div>{children}</div>;
 };

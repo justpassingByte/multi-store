@@ -19,31 +19,31 @@ const ProductsPage = ({ params }: { params: { storeId: string } }) => {
         const data: ProductsColumn[] = await response.json();
         console.log("Fetched Products data:", data);
 
-        const formattedProducts = data.map(item => {
-          let date: Date | null = null;
+        // const formattedProducts = data.map(item => {
+        //   let date: Date | null = null;
 
-          // Type guard for Timestamp
-          if (item.createAt && typeof item.createAt === 'object' && 'seconds' in item.createAt) {
-            date = new Date((item.createAt as Timestamp).seconds * 1000);
-          } else if (typeof item.createAt === 'string') {
-            date = new Date(item.createAt);
-          }
+        //   // Type guard for Timestamp
+        //   if (item.createAt && typeof item.createAt === 'object' && 'seconds' in item.createAt) {
+        //     date = new Date((item.createAt as Timestamp).seconds * 1000);
+        //   } else if (typeof item.createAt === 'string') {
+        //     date = new Date(item.createAt);
+        //   }
 
-          if (!date || !isValid(date)) {
-            console.error("Invalid date value:", date);
-            return { ...item, createAt: 'Invalid date' }; 
-          }
+        //   if (!date || !isValid(date)) {
+        //     console.error("Invalid date value:", date);
+        //     return { ...item, createAt: 'Invalid date' }; 
+        //   }
 
-          // Use a shorter date format
-          const formattedDate = format(date, 'MM/dd/yyyy');
+        //   // Use a shorter date format
+        //   const formattedDate = format(date, 'MM/dd/yyyy');
 
-          return {
-            ...item,
-            createAt: formattedDate, 
-          };
-        });
+        //   return {
+        //     ...item,
+        //     createAt: formattedDate, 
+        //   };
+        // });
 
-        setProductsData(formattedProducts);
+        setProductsData(productsData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching Products:', error);

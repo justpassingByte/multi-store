@@ -7,7 +7,6 @@ import { CellAction } from "./cell-action"
 
 
 export type ProductsColumn = {
-  createAt: string
   id: string
   name: string
   price: number
@@ -78,19 +77,19 @@ export const columns: ColumnDef<ProductsColumn>[] = [
     cell: ({ getValue }) => getValue<string>(),
     header: () => "Cuisine",
   },
-  {
-    accessorKey: "date",
-    cell: ({ getValue }) => getValue<string>(),
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Date
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
+  // {
+  //   accessorKey: "date",
+  //   cell: ({ getValue }) => getValue<string>(),
+  //   header: ({ column }) => (
+  //     <Button
+  //       variant="ghost"
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Date
+  //       <ArrowUpDown className="ml-2 h-4 w-4" />
+  //     </Button>
+  //   ),
+  // },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
