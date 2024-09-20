@@ -19,7 +19,7 @@ const SetupLayout = async ({ children }: SetupLayoutProp) => {
   const storeSnap = await getDocs(
     query(collection(db, "stores"), where("userId", "==", userId))
   );
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   let store = null as any;
   storeSnap.forEach(doc => {
     // Combine doc.id with doc.data()
