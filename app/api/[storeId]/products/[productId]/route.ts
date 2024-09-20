@@ -1,7 +1,7 @@
 import { db, storage } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
-import {  deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {  and, collection, deleteDoc, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
@@ -114,6 +114,40 @@ export const DELETE = async (req: Request, { params }: { params: { storeId: stri
 
   } catch (error) {
     console.error(`DELETE_PRODUCT_ERROR: ${error}`);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+};
+export const GET = async (
+  req: Request, 
+  { params }: { params: { storeId: string, productId: string } }
+) => {
+  try {
+    const { storeId, productId } = params;
+
+    if (!storeId || !productId) {
+      return new NextResponse("Store ID or Product ID is missing", { status: 400 });
+    }
+
+    // Get the store document to check access
+    const store = await getDoc(doc(db, "stores", storeId));
+    if (!store.exists()) {
+      return new NextResponse("Store not found", { status: 404 });
+    }
+
+    // Reference to the specific product document
+    const productRef = doc(db, "stores", storeId, "products", productId);
+
+    // Fetch the product document
+    const productDoc = await getDoc(productRef);
+    if (!productDoc.exists()) {
+      return new NextResponse("Product not found", { status: 404 });
+    }
+
+    // Return the product data
+    const productData = productDoc.data() as Products;
+    return NextResponse.json(productData);
+  } catch (error) {
+    console.error(`GET_PRODUCT_BY_ID_ERROR: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };

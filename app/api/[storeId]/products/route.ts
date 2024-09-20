@@ -15,7 +15,7 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
     }
 
     const body = await req.json();
-    const { name, price, images, isFeatured, isArchieved, category, size, kitchen, cuisine } = body;
+    const { name, price, images, isFeature, isArchieve, category, size, kitchen, cuisine } = body;
 
     if (!name || typeof price !== 'number' || !category || !images || !Array.isArray(images) || images.length === 0) {
       return new NextResponse("Required fields are missing or invalid", { status: 400 });
@@ -30,8 +30,8 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
       name,
       price,
       images,
-      isFeatured: isFeatured || false,
-      isArchieved: isArchieved || false,
+      isFeature,
+      isArchieve,
       category,
       size,
       kitchen,
@@ -40,15 +40,15 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
     };
 
     const productRef = await addDoc(collection(db, "stores", params.storeId, "products"), productData);
-    const productId = productRef.id;
+    const id = productRef.id;
 
-    await updateDoc(doc(db, "stores", params.storeId, "products", productId), {
+    await updateDoc(doc(db, "stores", params.storeId, "products", id), {
       ...productData,
-      productId,
+      id,
       updateAt: serverTimestamp()
     });
 
-    return NextResponse.json({ productId, ...productData });
+    return NextResponse.json({ id, ...productData });
   } catch (error) {
     console.error(`PRODUCT_POST_ERROR:${error}`,);
     return new NextResponse("Internal Server Error", { status: 500 });

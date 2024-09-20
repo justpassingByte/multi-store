@@ -10,8 +10,8 @@ export type ProductsColumn = {
   id: string
   name: string
   price: number
-  feature: string
-  achieve: string
+  isFeature: boolean
+  isArchieve: boolean
   category: string
   size: string
   kitchen: string
@@ -48,15 +48,15 @@ export const columns: ColumnDef<ProductsColumn>[] = [
     ),
   },
   {
-    accessorKey: "feature",
-    cell: ({ getValue }) => getValue<string>(),
+    accessorKey: "isFeature",
+    cell: ({ getValue }) => (getValue<boolean>() ? "Yes" : "No"),
     header: () => "Feature",
-  },
-  {
-    accessorKey: "achieve",
-    cell: ({ getValue }) => getValue<string>(),
-    header: () => "Achieve",
-  },
+  },  
+    {
+      accessorKey: "archieve",
+      cell: ({ getValue }) => (getValue<boolean>() ? "Yes" : "No"),
+      header: () => "Archieve",
+    },   
   {
     accessorKey: "category",
     cell: ({ getValue }) => getValue<string>(),
