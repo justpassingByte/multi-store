@@ -5,11 +5,16 @@ import {  deleteDoc, doc, getDoc,serverTimestamp, updateDoc} from "firebase/fire
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
-import cors from "@/lib/cors"; 
-
 export const PATCH = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
-  // Apply the CORS middleware
-  await cors(req, NextResponse);
+  // Add CORS headers
+  const headers = new Headers();
+  headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
+  headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+  headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return new NextResponse(null, { headers, status: 204 });
+  }
 
   try {
     const body = await req.json();
@@ -49,8 +54,16 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
 
 
 export const DELETE = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
-    // Apply the CORS middleware
-    await cors(req, NextResponse);
+    // Add CORS headers
+    const headers = new Headers();
+    headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
+    headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+      return new NextResponse(null, { headers, status: 204 });
+    }
+
   try {
     // Get the authenticated user
     const { userId } = auth();
@@ -111,8 +124,6 @@ export const GET = async (
   req: Request, 
   { params }: { params: { storeId: string, productId: string } }
 ) => {
-    // Apply the CORS middleware
-    await cors(req, NextResponse);
   try {
     const { storeId, productId } = params;
 

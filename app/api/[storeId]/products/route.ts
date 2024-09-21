@@ -1,6 +1,6 @@
 
 
-import cors from "@/lib/cors";
+
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
@@ -8,8 +8,16 @@ import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, 
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
-    // Apply the CORS middleware
-    await cors(req, NextResponse);
+    // Add CORS headers
+    const headers = new Headers();
+    headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
+    headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+      return new NextResponse(null, { headers, status: 204 });
+    }
+
   try {
     const { userId } = auth();
 
@@ -61,8 +69,16 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
 export const GET = async (
   req: Request, { params }: { params: { storeId: string} }
 ) => {
-    // Apply the CORS middleware
-    await cors(req, NextResponse);
+   // Add CORS headers
+   const headers = new Headers();
+   headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
+   headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+   headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+   if (req.method === "OPTIONS") {
+     return new NextResponse(null, { headers, status: 204 });
+   }
+
   try {
     if (!params.storeId) {
       return new NextResponse("Store Id is missing", { status: 400 })
