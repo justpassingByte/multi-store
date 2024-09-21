@@ -1,5 +1,6 @@
 
 
+import cors from "@/lib/cors";
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
@@ -7,6 +8,8 @@ import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, 
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
+    // Apply the CORS middleware
+    await cors(req, NextResponse);
   try {
     const { userId } = auth();
 
@@ -58,6 +61,8 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
 export const GET = async (
   req: Request, { params }: { params: { storeId: string} }
 ) => {
+    // Apply the CORS middleware
+    await cors(req, NextResponse);
   try {
     if (!params.storeId) {
       return new NextResponse("Store Id is missing", { status: 400 })

@@ -5,38 +5,26 @@ import {  deleteDoc, doc, getDoc,serverTimestamp, updateDoc} from "firebase/fire
 import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
+import cors from "@/lib/cors"; 
+
 export const PATCH = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
+  // Apply the CORS middleware
+  await cors(req, NextResponse);
+
   try {
-    const { userId } = auth();
-
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 403 });
-    }
-
     const body = await req.json();
     const { name, price, images, isFeatured, isArchieved, category, size, kitchen, cuisine } = body;
 
-    // Validate incoming data
-    if (!name || typeof price !== 'number' || !category || !images || !Array.isArray(images) || images.length === 0) {
+    if (!name || typeof price !== "number" || !category || !images || !Array.isArray(images) || images.length === 0) {
       return new NextResponse("Required fields are missing or invalid", { status: 400 });
     }
 
-    // Check if the store exists and the user has access
-    const store = await getDoc(doc(db, "stores", params.storeId));
-    if (!store.exists() || store.data()?.userId !== userId) {
-      return new NextResponse("Unauthorized access", { status: 403 });
-    }
-
-    // Reference to the specific product document
     const productRef = doc(db, "stores", params.storeId, "products", params.productId);
-
-    // Check if the product exists
     const productDoc = await getDoc(productRef);
     if (!productDoc.exists()) {
       return new NextResponse("Product not found", { status: 404 });
     }
 
-    // Update the product document
     await updateDoc(productRef, {
       name,
       price,
@@ -47,20 +35,22 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
       size,
       kitchen,
       cuisine,
-      updateAt: serverTimestamp()
+      updateAt: serverTimestamp(),
     });
 
-    // Return updated product data
     const updatedProduct = (await getDoc(productRef)).data() as Products;
     return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error(`PRODUCT_PATCH_ERROR: ${error}`,);
+    console.error(`PRODUCT_PATCH_ERROR: ${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
 
 
+
 export const DELETE = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
+    // Apply the CORS middleware
+    await cors(req, NextResponse);
   try {
     // Get the authenticated user
     const { userId } = auth();
@@ -121,6 +111,8 @@ export const GET = async (
   req: Request, 
   { params }: { params: { storeId: string, productId: string } }
 ) => {
+    // Apply the CORS middleware
+    await cors(req, NextResponse);
   try {
     const { storeId, productId } = params;
 
