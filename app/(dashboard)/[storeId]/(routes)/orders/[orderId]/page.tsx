@@ -99,9 +99,9 @@ const OrderPage = ({
         }
     };
 
-    const formattedDate = currentOrder?.createAt
-        ? new Timestamp(currentOrder.createAt.seconds, currentOrder.createAt.nanoseconds).toDate().toLocaleDateString()
-        : '';
+    // const formattedDate = currentOrder?.createAt
+    //     ? new Timestamp(currentOrder.createAt.seconds, currentOrder.createAt.nanoseconds).toDate().toLocaleDateString()
+    //     : '';
 
     if (loading) {
         return <div>Loading...</div>;
