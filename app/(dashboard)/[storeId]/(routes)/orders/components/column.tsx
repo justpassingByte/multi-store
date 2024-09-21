@@ -14,13 +14,20 @@ export type OrdersColumn = {
   orderItems: Products[],
   address: string,
   order_status: string,
-  images: string[]
-  createAt: string
+  images: string[],
+  createAt: string,
+  totalPrice:string,
 }
-
+const formatPrice = (price: number) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD', 
+  });
+  return formatter.format(price);
+};
 export const columns: ColumnDef<OrdersColumn>[] = [
   {
-    accessorKey: "orderItems",
+    accessorKey: "images",
     header: "Images",
     cell: ({ row }) => (
       <div className="grid grid-cols-2 gap-2">
@@ -50,6 +57,21 @@ export const columns: ColumnDef<OrdersColumn>[] = [
   
   },
   {
+    accessorKey: "totalPrice",
+    header: ({ column }) => (
+      <Button
+      
+      variant="ghost"
+      onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Price
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ getValue }) => formatPrice(getValue<number>()),
+  
+  },
+  {
     accessorKey: "isPaid",
     header: () => {
     return "Paid"
@@ -63,20 +85,20 @@ export const columns: ColumnDef<OrdersColumn>[] = [
     header: () => "Status"
  
   },
-  {
-    accessorKey: "createAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
-    },
-  },
+  // {
+  //   accessorKey: "createAt",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //       >
+  //         Date
+  //         <ArrowUpDown className="ml-2 h-4 w-4" />
+  //       </Button>
+  //     )
+  //   },
+  // },
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />

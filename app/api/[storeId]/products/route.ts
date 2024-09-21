@@ -1,30 +1,33 @@
-
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
 import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "http://localhost:3000",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
-
   try {
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 403 });
+      return NextResponse.json("Unauthorized", { status: 403, headers: corsHeaders });
     }
 
     const body = await req.json();
     const { name, price, images, isFeature, isArchieve, category, size, kitchen, cuisine } = body;
 
     if (!name || typeof price !== 'number' || !category || !images || !Array.isArray(images) || images.length === 0) {
-      return new NextResponse("Required fields are missing or invalid", { status: 400 });
+      return NextResponse.json("Required fields are missing or invalid", { status: 400, headers: corsHeaders });
     }
 
     const store = await getDoc(doc(db, "stores", params.storeId));
     if (!store.exists() || store.data()?.userId !== userId) {
-      return new NextResponse("Unauthorized access", { status: 403 });
+      return NextResponse.json("Unauthorized access", { status: 403, headers: corsHeaders });
     }
 
     const productData = {
@@ -37,7 +40,7 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
       size,
       kitchen,
       cuisine,
-      createAt: serverTimestamp()
+      createAt: serverTimestamp(),
     };
 
     const productRef = await addDoc(collection(db, "stores", params.storeId, "products"), productData);
@@ -46,59 +49,59 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
     await updateDoc(doc(db, "stores", params.storeId, "products", id), {
       ...productData,
       id,
-      updateAt: serverTimestamp()
+      updateAt: serverTimestamp(),
     });
 
-    return NextResponse.json({ id, ...productData });
+    return NextResponse.json({ id, ...productData }, { headers: corsHeaders });
   } catch (error) {
-    console.error(`PRODUCT_POST_ERROR:${error}`);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    console.error(`PRODUCT_POST_ERROR: ${error}`);
+    return NextResponse.json("Internal Server Error", { status: 500, headers: corsHeaders });
   }
 };
 
-export const GET = async (req: Request, { params }: { params: { storeId: string} }) => {
-
+export const GET = async (req: Request, { params }: { params: { storeId: string } }) => {
   try {
     if (!params.storeId) {
-      return new NextResponse("Store Id is missing", { status: 400 });
+      return NextResponse.json("Store Id is missing", { status: 400, headers: corsHeaders });
     }
-    // query based on searchParams
+
     const { searchParams } = new URL(req.url);
     const productRef = collection(doc(db, "stores", params.storeId), "products");
 
     let productQuery;
-    const queryContrains = [];
+    const queryConstraints = [];
     if (searchParams.has("size")) {
-      queryContrains.push(where("size", "==", searchParams.get("size")));
+      queryConstraints.push(where("size", "==", searchParams.get("size")));
     }
     if (searchParams.has("category")) {
-      queryContrains.push(where("category", "==", searchParams.get("category")));
+      queryConstraints.push(where("category", "==", searchParams.get("category")));
     }
     if (searchParams.has("kitchen")) {
-      queryContrains.push(where("kitchen", "==", searchParams.get("kitchen")));
+      queryConstraints.push(where("kitchen", "==", searchParams.get("kitchen")));
     }
     if (searchParams.has("cuisine")) {
-      queryContrains.push(where("cuisine", "==", searchParams.get("cuisine")));
+      queryConstraints.push(where("cuisine", "==", searchParams.get("cuisine")));
     }
     if (searchParams.has("isFeature")) {
-      queryContrains.push(where("isFeature", "==", searchParams.get("isFeature") === "true"));
+      queryConstraints.push(where("isFeature", "==", searchParams.get("isFeature") === "true"));
     }
     if (searchParams.has("isArchieve")) {
-      queryContrains.push(where("isArchieve", "==", searchParams.get("isArchieve") === "true"));
+      queryConstraints.push(where("isArchieve", "==", searchParams.get("isArchieve") === "true"));
     }
-    if(queryContrains.length > 0){
-      productQuery = query(productRef, and(...queryContrains));
+    if (queryConstraints.length > 0) {
+      productQuery = query(productRef, and(...queryConstraints));
     } else {
       productQuery = query(productRef);
     }
-    //execute query
+
     const querySnapshot = await getDocs(productQuery);
-    const productData : Products[] = querySnapshot.docs.map(
+    const productData: Products[] = querySnapshot.docs.map(
       (doc) => doc.data() as Products
     );
-    return NextResponse.json(productData);
+    
+    return NextResponse.json(productData, { headers: corsHeaders });
   } catch (error) {
-    console.log(`PRODUCT_GET:${error}`);
-    return new NextResponse("Internal server error", { status: 500 });
+    console.log(`PRODUCT_GET: ${error}`);
+    return NextResponse.json("Internal Server Error", { status: 500, headers: corsHeaders });
   }
 };

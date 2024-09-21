@@ -1,37 +1,35 @@
-import { authMiddleware } from "@clerk/nextjs/server";
-import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { authMiddleware, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-// Middleware xác thực
-export const clerkMiddleware = authMiddleware({
-  publicRoutes: ["/api/:path*"],
-});
+// const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
 
-export default async function middleware(req: NextRequest,event: NextFetchEvent) {
-  // Gọi middleware xác thực
-  const response = await clerkMiddleware(req,event);
+// export default clerkMiddleware((auth, request) => {
+//   if (!isPublicRoute(request)) {
+//     auth().protect()
+//   }
+// })
+export default authMiddleware({
+  publicRoutes:["/api/:path*"]
+})
+// export function middleware(req: Request) {
+//   const res = NextResponse.next();
 
-  // Nếu đã xử lý rồi, trả về phản hồi
-  if (response) {
-    return response;
-  }
+//   res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+//   res.headers.set("Access-Control-Allow-Headers", "Content-Type");
 
-  // Thêm headers CORS
-  const res = NextResponse.next();
-  res.headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-  res.headers.set("Access-Control-Allow-Headers", "Content-Type");
+//   // Handle preflight requests
+//   if (req.method === "OPTIONS") {
+//     return new NextResponse(null, { status: 204, headers: res.headers });
+//   }
 
-  // Xử lý các yêu cầu OPTIONS
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, { status: 204, headers: res.headers });
-  }
-
-  return res;
-}
-
+//   return res;
+// }
 export const config = {
   matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
     '/(api|trpc)(.*)',
   ],
 };

@@ -15,36 +15,29 @@ const Order = ({ params }: { params: { storeId: string } }) => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`/api/${params.storeId}/order`);
+        const response = await fetch(`/api/${params.storeId}/orders`);
         const data: OrdersColumn[] = await response.json();
 
         console.log("Fetched Order data:", data);
 
-        const formattedOrder = data.map(item => {
-          let date: Date | null = null;
-
-          // Type guard for Timestamp
-          if (item.createAt && typeof item.createAt === 'object' && 'seconds' in item.createAt) {
-            date = new Date((item.createAt as Timestamp).seconds * 1000);
-          } else if (typeof item.createAt === 'string') {
-            date = new Date(item.createAt);
-          }
-
-          if (!date || !isValid(date)) {
-            console.error("Invalid date value:", date);
-            return { ...item, createAt: 'Invalid date' }; 
-          }
-
-          // Use a shorter date format
-          const formattedDate = format(date, 'MM/dd/yyyy');
+        // Transform the data to include aggregated image URLs
+        const transformedData = data.map(order => {
+          const images = order.orderItems.flatMap(item => item.images?.map(img => img.url) || []); // Extract URLs
+          // Calculate total price
+          const totalPrice = order.orderItems.reduce((total, item) => {
+            const price = item.price || 0; // Assuming item has price
+            const quantity = item.qty || 1; // Assuming item has quantity
+            return total + price * quantity; // Calculate total
+          }, 0).toFixed(2); // Format to 2 decimal places
 
           return {
-            ...item,
-            createAt: formattedDate,
+            ...order,
+            images,
+            totalPrice,
           };
         });
 
-        setOrderData(formattedOrder);
+        setOrderData(transformedData);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching Order:', error);
@@ -54,6 +47,7 @@ const Order = ({ params }: { params: { storeId: string } }) => {
 
     fetchOrder();
   }, [params.storeId]);
+
 
   if (loading) return <Loading />;
 
