@@ -1,10 +1,12 @@
 import Cors from 'cors';
 
-// Helper method to wait for the middleware to run before continuing with the request
+
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function initMiddleware(middleware: any) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (req: any, res: any) =>
     new Promise((resolve, reject) => {
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       middleware(req, res, (result: any) => {
         if (result instanceof Error) {
           return reject(result);
