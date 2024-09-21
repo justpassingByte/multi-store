@@ -1,7 +1,7 @@
 "use client";
 import { db } from '@/lib/firebase';
 import { Orders, Products } from '@/type-db';
-import { collection, doc, getDoc, getDocs, Timestamp, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardContent, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
