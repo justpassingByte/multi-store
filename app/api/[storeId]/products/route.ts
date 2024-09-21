@@ -1,4 +1,4 @@
-import { setCorsHeaders } from "@/lib/cor";
+
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
@@ -7,15 +7,6 @@ import { NextResponse } from "next/server";
 
 
 export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
- // Xử lý preflight request
- if (req.method === "OPTIONS") {
-  const response = new Response(null, { status: 204 });
-  return setCorsHeaders(response);
-}
-
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, { status: 204 });
-  }
 
   try {
     const { userId } = auth();
@@ -66,15 +57,6 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
 };
 
 export const GET = async (req: Request, { params }: { params: { storeId: string} }) => {
-   // Xử lý preflight request
-   if (req.method === "OPTIONS") {
-    const response = new Response(null, { status: 204 });
-    return setCorsHeaders(response);
-  }
-
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, { status: 204 });
-  }
 
   try {
     if (!params.storeId) {
