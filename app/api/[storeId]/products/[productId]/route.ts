@@ -1,3 +1,4 @@
+import { setCorsHeaders } from "@/lib/cor";
 import { db, storage } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
@@ -6,16 +7,11 @@ import { deleteObject, ref } from "firebase/storage";
 import { NextResponse } from "next/server";
 
 export const PATCH = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
-  // Add CORS headers
-  const headers = new Headers();
-  headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
-  headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-  headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, { headers, status: 204 });
+   // Xử lý preflight request
+   if (req.method === "OPTIONS") {
+    const response = new Response(null, { status: 204 });
+    return setCorsHeaders(response);
   }
-
   try {
     const body = await req.json();
     const { name, price, images, isFeatured, isArchieved, category, size, kitchen, cuisine } = body;
@@ -54,15 +50,11 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
 
 
 export const DELETE = async (req: Request, { params }: { params: { storeId: string, productId: string } }) => {
-    // Add CORS headers
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
-    headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-    if (req.method === "OPTIONS") {
-      return new NextResponse(null, { headers, status: 204 });
-    }
+    // Xử lý preflight request
+  if (req.method === "OPTIONS") {
+    const response = new Response(null, { status: 204 });
+    return setCorsHeaders(response);
+  }
 
   try {
     // Get the authenticated user
@@ -124,6 +116,11 @@ export const GET = async (
   req: Request, 
   { params }: { params: { storeId: string, productId: string } }
 ) => {
+   // Xử lý preflight request
+   if (req.method === "OPTIONS") {
+    const response = new Response(null, { status: 204 });
+    return setCorsHeaders(response);
+  }
   try {
     const { storeId, productId } = params;
 

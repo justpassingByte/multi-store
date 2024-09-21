@@ -1,22 +1,21 @@
-
-
-
+import { setCorsHeaders } from "@/lib/cor";
 import { db } from "@/lib/firebase";
 import { Products } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
 import { addDoc, and, collection, doc, getDoc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
-export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
-    // Add CORS headers
-    const headers = new Headers();
-    headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
-    headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-    headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-    if (req.method === "OPTIONS") {
-      return new NextResponse(null, { headers, status: 204 });
-    }
+export const POST = async (req: Request, { params }: { params: { storeId: string } }) => {
+ // Xử lý preflight request
+ if (req.method === "OPTIONS") {
+  const response = new Response(null, { status: 204 });
+  return setCorsHeaders(response);
+}
+
+  if (req.method === "OPTIONS") {
+    return new NextResponse(null, { status: 204 });
+  }
 
   try {
     const { userId } = auth();
@@ -61,65 +60,63 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
 
     return NextResponse.json({ id, ...productData });
   } catch (error) {
-    console.error(`PRODUCT_POST_ERROR:${error}`,);
+    console.error(`PRODUCT_POST_ERROR:${error}`);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 };
 
-export const GET = async (
-  req: Request, { params }: { params: { storeId: string} }
-) => {
-   // Add CORS headers
-   const headers = new Headers();
-   headers.set("Access-Control-Allow-Origin", "*"); // Allow all origins
-   headers.set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-   headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
+export const GET = async (req: Request, { params }: { params: { storeId: string} }) => {
+   // Xử lý preflight request
    if (req.method === "OPTIONS") {
-     return new NextResponse(null, { headers, status: 204 });
-   }
+    const response = new Response(null, { status: 204 });
+    return setCorsHeaders(response);
+  }
+
+  if (req.method === "OPTIONS") {
+    return new NextResponse(null, { status: 204 });
+  }
 
   try {
     if (!params.storeId) {
-      return new NextResponse("Store Id is missing", { status: 400 })
+      return new NextResponse("Store Id is missing", { status: 400 });
     }
     // query based on searchParams
-    const { searchParams } = new URL(req.url)
-    const productRef = collection(doc(db, "stores", params.storeId), "products")
+    const { searchParams } = new URL(req.url);
+    const productRef = collection(doc(db, "stores", params.storeId), "products");
 
-    let productQuery
-    const queryContrains = []
+    let productQuery;
+    const queryContrains = [];
     if (searchParams.has("size")) {
-      queryContrains.push(where("size", "==", searchParams.get("size")))
+      queryContrains.push(where("size", "==", searchParams.get("size")));
     }
     if (searchParams.has("category")) {
-      queryContrains.push(where("category", "==", searchParams.get("category")))
+      queryContrains.push(where("category", "==", searchParams.get("category")));
     }
     if (searchParams.has("kitchen")) {
-      queryContrains.push(where("kitchen", "==", searchParams.get("kitchen")))
+      queryContrains.push(where("kitchen", "==", searchParams.get("kitchen")));
     }
     if (searchParams.has("cuisine")) {
-      queryContrains.push(where("cuisine", "==", searchParams.get("cuisine")))
+      queryContrains.push(where("cuisine", "==", searchParams.get("cuisine")));
     }
     if (searchParams.has("isFeature")) {
-      queryContrains.push(where("isFeature", "==", searchParams.get("isFeature") === "true" ? true : false))
+      queryContrains.push(where("isFeature", "==", searchParams.get("isFeature") === "true"));
     }
     if (searchParams.has("isArchieve")) {
-      queryContrains.push(where("isArchieve", "==", searchParams.get("isArchieve") === "true" ? true : false))
+      queryContrains.push(where("isArchieve", "==", searchParams.get("isArchieve") === "true"));
     }
     if(queryContrains.length > 0){
-      productQuery = query(productRef, and(...queryContrains))
-    }else{
-      productQuery = query(productRef)
+      productQuery = query(productRef, and(...queryContrains));
+    } else {
+      productQuery = query(productRef);
     }
     //execute query
-    const querySnapshot = await getDocs(productQuery)
+    const querySnapshot = await getDocs(productQuery);
     const productData : Products[] = querySnapshot.docs.map(
       (doc) => doc.data() as Products
-    )
-    return NextResponse.json(productData)
+    );
+    return NextResponse.json(productData);
   } catch (error) {
     console.log(`PRODUCT_GET:${error}`);
-    return new NextResponse("Internal server error", { status: 500 })
+    return new NextResponse("Internal server error", { status: 500 });
   }
-}
+};
