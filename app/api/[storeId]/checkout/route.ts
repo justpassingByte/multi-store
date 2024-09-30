@@ -1,8 +1,6 @@
 import { db, storage } from "@/lib/firebase";
 import { Products } from "@/type-db";
-import { auth } from "@clerk/nextjs/server";
-import { addDoc, collection, deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { deleteObject, ref } from "firebase/storage";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
 import {stripe} from "@/lib/stripe";
 import Stripe from "stripe";
