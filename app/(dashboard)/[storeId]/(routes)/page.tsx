@@ -13,7 +13,6 @@ interface DashBoardOverviewProp {
 
 const DashBoardOverview =  ({ params }: DashBoardOverviewProp) => {
   type DateRange = '7d' | '30d' | '90d';
-  const totalRevenue = 1250000;
   const [dateRange, setDateRange] = useState<DateRange>('7d');
   const [mounted, setMounted] = useState(false);
 
