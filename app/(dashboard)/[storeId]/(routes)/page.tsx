@@ -1,44 +1,33 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
 import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MetricCard } from '@/components/ui/metric-card';
+import { getTotalRevenue } from '@/action/getTotalRevenue';
+import { getTotalSales } from '@/action/getSales';
+import { getTotalProducts } from '@/action/getProduct';
+import { getGraphTotalRevenue } from '@/action/getGraphDataTotalRevenue';
+import { getOrderTotalRevenueByCategory } from '@/action/getGraphDataTotalRevenueCategory';
 
-const DashBoardOverview =  () => {
+interface DashBoardOverviewProp {
+  params: { storeId: string };
+}
+
+const DashBoardOverview = async ({ params }: DashBoardOverviewProp) => {
   type DateRange = '7d' | '30d' | '90d';
-  const [dateRange, setDateRange] = useState<DateRange>('7d');
-  const [mounted, setMounted] = useState(false);
+  const dateRange: DateRange = '7d'; // You can set this to a default value
 
-  // Chart data
-  const monthlySalesData = [
-    { name: 'Jan', sales: 4000 },
-    { name: 'Feb', sales: 3000 },
-    { name: 'Mar', sales: 5000 },
-    { name: 'Apr', sales: 4500 },
-    { name: 'May', sales: 6000 },
-    { name: 'Jun', sales: 5500 },
-  ];
-
-  const revenueByCategoryData = [
-    { name: 'Electronics', value: 400 },
-    { name: 'Clothing', value: 300 },
-    { name: 'Books', value: 200 },
-    { name: 'Home & Garden', value: 278 },
-    { name: 'Toys', value: 189 },
-  ];
+  // Fetch data directly here
+  const revenue = await getTotalRevenue(params.storeId);
+  const sales = await getTotalSales(params.storeId);
+  const products = await getTotalProducts(params.storeId);
+  const monthlySalesData = await getGraphTotalRevenue(params.storeId);
+  const categorySalesData = await getOrderTotalRevenueByCategory(params.storeId);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
-
-  useEffect(() => {
-    setMounted(true); // Ensure the component is mounted on the client side before rendering charts
-  }, []);
-
-  if (!mounted) {
-    return null; // Prevent hydration issues by delaying render until after mount
-  }
 
   return (
     <div className="p-6 bg-background">
@@ -59,7 +48,7 @@ const DashBoardOverview =  () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
         <MetricCard
           title="Total Revenue"
-          value="$45,231.89"
+          value={revenue !== null ? `$${revenue.toFixed(2)}` : "Loading..."}
           change={20.1}
           icon={
             <svg
@@ -77,8 +66,8 @@ const DashBoardOverview =  () => {
           }
         />
         <MetricCard
-          title="Subscriptions"
-          value="+2350"
+          title="Products"
+          value={products !== null ? `+${products}` : "Loading..."}
           change={180.1}
           icon={
             <svg
@@ -99,7 +88,7 @@ const DashBoardOverview =  () => {
         />
         <MetricCard
           title="Sales"
-          value="+12,234"
+          value={sales !== null ? `+${sales}` : "Loading..."}
           change={19}
           icon={
             <svg
@@ -150,7 +139,7 @@ const DashBoardOverview =  () => {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="sales" fill="#8884d8" />
+                <Bar dataKey="total" fill="#8884d8" />
               </BarChart>
             </div>
           </CardContent>
@@ -164,7 +153,7 @@ const DashBoardOverview =  () => {
             <div className="w-full h-[300px]">
               <PieChart width={500} height={300}>
                 <Pie
-                  data={revenueByCategoryData}
+                  data={categorySalesData}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -173,7 +162,7 @@ const DashBoardOverview =  () => {
                   dataKey="value"
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                  {revenueByCategoryData.map((entry, index) => (
+                  {categorySalesData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
