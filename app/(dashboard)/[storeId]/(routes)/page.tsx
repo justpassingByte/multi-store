@@ -7,11 +7,7 @@ import { Select } from '@radix-ui/react-select';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MetricCard } from '@/components/ui/metric-card';
 
-interface DashBoardOverviewProp {
-  params: { storeId: string };
-}
-
-const DashBoardOverview =  ({ params }: DashBoardOverviewProp) => {
+const DashBoardOverview =  () => {
   type DateRange = '7d' | '30d' | '90d';
   const [dateRange, setDateRange] = useState<DateRange>('7d');
   const [mounted, setMounted] = useState(false);
