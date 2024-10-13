@@ -19,7 +19,7 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
     }
 
     const body = await req.json();
-    const { name, price, images, isFeature, isArchieve, category, size, kitchen, cuisine } = body;
+    const { name, price, images, isFeature, isArchieve, category, size, kitchen, cuisine, description, ingredients,calories } = body;
 
     if (!name || typeof price !== 'number' || !category || !images || !Array.isArray(images) || images.length === 0) {
       return NextResponse.json("Required fields are missing or invalid", { status: 400, headers: corsHeaders });
@@ -40,6 +40,9 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
       size,
       kitchen,
       cuisine,
+      description,
+      ingredients,
+      calories,
       createAt: serverTimestamp(),
     };
 
@@ -82,6 +85,7 @@ export const GET = async (req: Request, { params }: { params: { storeId: string 
     if (searchParams.has("cuisine")) {
       queryConstraints.push(where("cuisine", "==", searchParams.get("cuisine")));
     }
+  
     if (searchParams.has("isFeature")) {
       queryConstraints.push(where("isFeature", "==", searchParams.get("isFeature") === "true"));
     }

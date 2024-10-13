@@ -55,6 +55,9 @@ export interface Products {
     kitchen:string,
     cuisine: string,
     date: string,
+    description:string,
+    ingredients:string,
+    calories:number,
     createAt?:Timestamp,
     updateAt?:Timestamp,
   }
