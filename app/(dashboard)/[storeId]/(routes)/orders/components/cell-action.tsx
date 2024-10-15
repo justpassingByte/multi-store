@@ -18,12 +18,12 @@ export const CellAction =({data}: CellActionProps) =>{
     const [open, setOpen] = useState(false)
 
     const onDelete = async () => {
-      console.log("order data:", data);
+      console.log("Order data:", data);
       
       try {
           setIsLoading(true);
 
-          // Log the API call to delete the categories in Firestore
+          
           console.log(`Attempting to delete from Firestore: /api/${params.storeId}/orders/${data.id}`);
           
           await axios.delete(`/api/${params.storeId}/orders/${data.id}`);

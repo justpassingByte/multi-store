@@ -1,6 +1,6 @@
 import { db } from "@/lib/firebase";
 import { Orders } from "@/type-db";
-import { collection,  getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
@@ -26,7 +26,7 @@ export const GET = async (req: Request, { params }: { params: { storeId: string,
 
         // If userId is not provided, fetch all orders for the store
         if (!userId) {
-            orderQuery = collection(db, "stores", storeId, "orders");
+            return new NextResponse('UserId is Missing', { status: 400, headers: corsHeaders });
         } else {
             // If userId is provided, fetch orders for the specific user
             orderQuery = query(
