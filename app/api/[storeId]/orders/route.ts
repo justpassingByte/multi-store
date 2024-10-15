@@ -22,9 +22,9 @@ export const GET = async (req: Request, { params }: { params: { storeId: string 
         }
 
         // Create the query based on whether userId is provided
-        let orderQuery;
+       
     
-            orderQuery = collection(db, "stores", storeId, "orders");
+         const  orderQuery = collection(db, "stores", storeId, "orders");
        
 
         const orderSnapshot = await getDocs(orderQuery);
