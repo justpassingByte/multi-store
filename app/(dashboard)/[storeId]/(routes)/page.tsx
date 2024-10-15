@@ -3,8 +3,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
-import { Select } from '@radix-ui/react-select';
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MetricCard } from '@/components/ui/metric-card';
 import { getTotalRevenue } from '@/action/getTotalRevenue';
 import { getTotalSales } from '@/action/getSales';
@@ -17,9 +15,6 @@ interface DashBoardOverviewProp {
 }
 
 const DashBoardOverview = async ({ params }: DashBoardOverviewProp) => {
-  type DateRange = '7d' | '30d' | '90d';
-  const dateRange: DateRange = '7d'; // You can set this to a default value
-
   // Fetch data directly here
   const revenue = await getTotalRevenue(params.storeId);
   const sales = await getTotalSales(params.storeId);
@@ -33,16 +28,7 @@ const DashBoardOverview = async ({ params }: DashBoardOverviewProp) => {
     <div className="p-6 bg-background">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Dashboard Overview</h1>
-        <Select value={dateRange} onValueChange={(value: DateRange) => setDateRange(value)}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select date range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="7d">Last 7 days</SelectItem>
-            <SelectItem value="30d">Last 30 days</SelectItem>
-            <SelectItem value="90d">Last 90 days</SelectItem>
-          </SelectContent>
-        </Select>
+
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-6">
