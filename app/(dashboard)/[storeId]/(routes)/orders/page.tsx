@@ -20,10 +20,10 @@ const Order = ({ params }: { params: { storeId: string } }) => {
           const images = order.orderItems.flatMap(item => item.images?.map(img => img.url) || []); // Extract URLs
           // Calculate total price
           const totalPrice = order.orderItems.reduce((total, item) => {
-            const price = item.price || 0; // Assuming item has price
-            const quantity = item.qty || 1; // Assuming item has quantity
-            return total + price * quantity; // Calculate total
-          }, 0).toFixed(2); // Format to 2 decimal places
+            const price = item.price || 0; 
+            const quantity = item.qty || 1; 
+            return total + price * quantity; 
+          }, 0).toFixed(2); 
 
           return {
             ...order,

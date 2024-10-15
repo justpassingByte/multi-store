@@ -13,9 +13,9 @@ export const OPTIONS = async () => {
     return NextResponse.json({}, { headers: corsHeaders });
 };
 
-export const GET = async (req: Request, { params }: { params: { storeId: string } }) => {
+export const GET = async (req: Request, { params }: { params: { storeId: string, userId: string } }) => {
     try {
-        const { storeId } = params;
+        const { storeId, userId } = params;
 
         if (!storeId) {
             return new NextResponse('StoreId is Missing', { status: 400, headers: corsHeaders });
@@ -23,9 +23,11 @@ export const GET = async (req: Request, { params }: { params: { storeId: string 
 
         // Create the query based on whether userId is provided
         let orderQuery;
-    
+        if (userId) {
+            orderQuery = query(collection(db, "stores", storeId, "orders"), where("userId", "==", userId));
+        } else {
             orderQuery = collection(db, "stores", storeId, "orders");
-       
+        }
 
         const orderSnapshot = await getDocs(orderQuery);
         const orderData: Orders[] = orderSnapshot.docs.map((doc) => doc.data() as Orders);
