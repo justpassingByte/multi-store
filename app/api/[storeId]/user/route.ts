@@ -1,5 +1,6 @@
 import { db } from "@/lib/firebase";
 import { Orders } from "@/type-db";
+import { auth } from "@clerk/nextjs/server";
 import { collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
@@ -13,10 +14,11 @@ export const OPTIONS = async () => {
     return NextResponse.json({}, { headers: corsHeaders });
 };
 
-export const GET = async (req: Request, { params }: { params: { storeId: string, userId?: string } }) => {
+export const GET = async (req: Request, { params }: { params: { storeId: string } }) => {
     try {
-        const { storeId, userId } = params;
-    
+        const { storeId } = params;
+        const {userId} = auth();
+        // const userId = "user_2m7S8AhmsEBAIRNRTWPoicPr4o4"
         // Ensure storeId is provided
         if (!storeId) {
             return new NextResponse('StoreId is Missing', { status: 400, headers: corsHeaders });
