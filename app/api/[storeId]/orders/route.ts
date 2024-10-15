@@ -1,6 +1,6 @@
 import { db } from "@/lib/firebase";
 import { Orders } from "@/type-db";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { NextResponse } from "next/server";
 
 const corsHeaders = {
