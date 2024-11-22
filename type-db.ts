@@ -58,6 +58,9 @@ export interface Products {
     description:string,
     ingredients:string,
     calories:number,
+    protein: number,
+    carbs: number,
+    fat: number,
     createAt?:Timestamp,
     updateAt?:Timestamp,
   }
@@ -73,4 +76,11 @@ export interface Products {
     createAt?:Timestamp,
     updateAt?:Timestamp,
   }
-  
+  export interface Combos {
+    id: string,
+    name: string,
+    price: number,
+    description: string;
+    images: {url: string}[]; 
+    products: Products[];
+  }

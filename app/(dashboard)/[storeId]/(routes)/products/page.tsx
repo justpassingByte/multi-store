@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ProductsColumn } from './components/column';
 import ProductClient from './components/product-client';
 import Loading from '@/components/ui/loading';
-// Import Timestamp from Firebase Firestore if using Firebase
+
 
 const ProductsPage = ({ params }: { params: { storeId: string } }) => {
   const [productsData, setProductsData] = useState<ProductsColumn[]>([]);

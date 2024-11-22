@@ -13,11 +13,11 @@ export const MainNav = ({className, ... props}: React.HtmlHTMLAttributes<HTMLEle
             label:"Overview",
             active: pathName ===`/${params.storeId}`
         },             
-        {
-            href:`/${params.storeId}/billboards`,
-            label:"BillBoards",
-            active: pathName ===`/${params.storeId}/billboards`
-        },
+        // {
+        //     href:`/${params.storeId}/billboards`,
+        //     label:"BillBoards",
+        //     active: pathName ===`/${params.storeId}/billboards`
+        // },
         {
             href:`/${params.storeId}/categories`,
             label:"Categories",
@@ -42,6 +42,11 @@ export const MainNav = ({className, ... props}: React.HtmlHTMLAttributes<HTMLEle
             href:`/${params.storeId}/products`,
             label:"Products",
             active: pathName ===`/${params.storeId}/products`
+        },
+        {
+            href:`/${params.storeId}/combos`,
+            label:"Combos",
+            active: pathName ===`/${params.storeId}/combos`
         },
         {
             href:`/${params.storeId}/orders`,

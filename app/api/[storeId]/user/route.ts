@@ -14,10 +14,11 @@ export const OPTIONS = async () => {
     return NextResponse.json({}, { headers: corsHeaders });
 };
 
-export const GET = async (req: Request, { params }: { params: { storeId: string } }) => {
+export const GET = async (req: Request, { params }: { params: { storeId: string} }) => {
     try {
-        const { storeId } = params;
+        const { storeId} = params;
         const {userId} = auth();
+    
         // const userId = "user_2m7S8AhmsEBAIRNRTWPoicPr4o4"
         // Ensure storeId is provided
         if (!storeId) {

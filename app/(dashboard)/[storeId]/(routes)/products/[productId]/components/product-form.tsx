@@ -37,7 +37,10 @@ const formSchema = z.object({
   cuisine: z.string().min(1),
   description: z.string().min(1),
   ingredients: z.string().min(1),
-  calories: z.coerce.number().min(1),
+  calories: z.coerce.number().min(0),
+  protein: z.coerce.number().min(0),
+  carbs: z.coerce.number().min(0),
+  fat: z.coerce.number().min(0),
   isFeature: z.boolean().default(false).optional(),
   isArchieve: z.boolean().default(false).optional(),
   images: z.object({ url: z.string() }).array()
@@ -58,6 +61,9 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
       descriptions: "",
       ingredients: "",
       calories: 0,
+      protein: 0,
+      carbs: 0,
+      fat: 0,
     }
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -300,6 +306,37 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
                 <FormMessage />
               </FormItem>
             )} />
+
+            <FormField control={form.control} name="protein" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Protein (g)</FormLabel>
+                <FormControl>
+                  <Input disabled={isLoading} placeholder="Protein" type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+
+            <FormField control={form.control} name="carbs" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Carbs (g)</FormLabel>
+                <FormControl>
+                  <Input disabled={isLoading} placeholder="Carbs" type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+
+            <FormField control={form.control} name="fat" render={({ field }) => (
+              <FormItem>
+                <FormLabel>Fat (g)</FormLabel>
+                <FormControl>
+                  <Input disabled={isLoading} placeholder="Fat" type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+
             <FormField control={form.control} name='isFeature' render={({ field }) => (
               <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3">
                 <FormControl>

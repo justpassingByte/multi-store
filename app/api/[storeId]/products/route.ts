@@ -19,7 +19,11 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
     }
 
     const body = await req.json();
-    const { name, price, images, isFeature, isArchieve, category, size, kitchen, cuisine, description, ingredients,calories } = body;
+    const { 
+      name, price, images, isFeature, isArchieve, category, 
+      size, kitchen, cuisine, description, ingredients,
+      calories, protein, carbs, fat 
+    } = body;
 
     if (!name || typeof price !== 'number' || !category || !images || !Array.isArray(images) || images.length === 0) {
       return NextResponse.json("Required fields are missing or invalid", { status: 400, headers: corsHeaders });
@@ -43,6 +47,9 @@ export const POST = async (req: Request, { params }: { params: { storeId: string
       description,
       ingredients,
       calories,
+      protein,
+      carbs,
+      fat,
       createAt: serverTimestamp(),
     };
 
@@ -91,6 +98,18 @@ export const GET = async (req: Request, { params }: { params: { storeId: string 
     }
     if (searchParams.has("isArchieve")) {
       queryConstraints.push(where("isArchieve", "==", searchParams.get("isArchieve") === "true"));
+    }
+    if (searchParams.has("minCalories")) {
+      queryConstraints.push(where("calories", ">=", parseInt(searchParams.get("minCalories")!)));
+    }
+    if (searchParams.has("maxCalories")) {
+      queryConstraints.push(where("calories", "<=", parseInt(searchParams.get("maxCalories")!)));
+    }
+    if (searchParams.has("minProtein")) {
+      queryConstraints.push(where("protein", ">=", parseInt(searchParams.get("minProtein")!)));
+    }
+    if (searchParams.has("maxProtein")) {
+      queryConstraints.push(where("protein", "<=", parseInt(searchParams.get("maxProtein")!)));
     }
     if (queryConstraints.length > 0) {
       productQuery = query(productRef, and(...queryConstraints));
