@@ -84,10 +84,20 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
       return new NextResponse("Internal Server Error", { status: 500, headers: corsHeaders });
     }
 };
-export const GET = async (req: Request, { params }: { params: { storeId: string, userId:string } }) => {
+export const GET = async (req: Request, { params }: { params: { storeId: string, userId: string, startDate: string, endDate: string } }) => {
   try {
-      const { storeId ,userId } = params;
-  
+      const { storeId, userId, startDate, endDate } = params;
+
+      // Lấy ngày hiện tại
+      const currentDate = new Date();
+      const currentStartDate = currentDate.toISOString().split('T')[0]; // Chỉ lấy phần ngày
+      const currentEndDate = currentStartDate; // Ngày hiện tại
+
+      // Kiểm tra xem startDate và endDate có phải là ngày hiện tại không
+      if (startDate !== currentStartDate || endDate !== currentEndDate) {
+          return new NextResponse('Start date and end date must be today', { status: 400, headers: corsHeaders });
+      }
+
       if (!storeId) {
           return new NextResponse('StoreId is Missing', { status: 400, headers: corsHeaders });
       }

@@ -99,9 +99,9 @@ const OrderPage = ({
         }
     };
 
-    // const formattedDate = currentOrder?.createAt
-    //     ? new Timestamp(currentOrder.createAt.seconds, currentOrder.createAt.nanoseconds).toDate().toLocaleDateString()
-    //     : '';
+    const formattedDate = currentOrder?.createAt
+        ? new Timestamp(currentOrder.createAt.seconds, currentOrder.createAt.nanoseconds).toDate().toLocaleDateString()
+        : '';
 
     if (loading) {
         return <div>Loading...</div>;
@@ -114,7 +114,7 @@ const OrderPage = ({
                 <Card className="md:col-span-2">
                     <CardHeader>
                         <CardTitle>Order #{currentOrder?.id}</CardTitle>
-                        {/* <p className="text-sm text-muted-foreground">Placed on {formattedDate}</p> */}
+                        <p className="text-sm text-muted-foreground">Placed on {formattedDate}</p>
                     </CardHeader>
                     <CardContent>
                         <Table>
