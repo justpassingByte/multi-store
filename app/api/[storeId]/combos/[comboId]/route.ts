@@ -1,4 +1,5 @@
 import { db, storage } from "@/lib/firebase";
+import { Combos } from "@/type-db";
 import { auth } from "@clerk/nextjs/server";
 import { deleteDoc, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
@@ -39,7 +40,7 @@ export const PATCH = async (req: Request, { params }: { params: { storeId: strin
       updateAt: serverTimestamp(),
     });
 
-    const updatedCombo = (await getDoc(comboRef)).data() as Combo;
+    const updatedCombo = (await getDoc(comboRef)).data() as Combos;
     return NextResponse.json(updatedCombo, { headers: corsHeaders });
   } catch (error) {
     console.error(`COMBO_PATCH_ERROR: ${error}`);
@@ -106,7 +107,7 @@ export const GET = async (req: Request, { params }: { params: { storeId: string;
       return NextResponse.json("Combo not found", { status: 404, headers: corsHeaders });
     }
 
-    const comboData = comboDoc.data() as Combo;
+    const comboData = comboDoc.data() as Combos;
     return NextResponse.json(comboData, { headers: corsHeaders });
   } catch (error) {
     console.error(`GET_COMBO_BY_ID_ERROR: ${error}`);

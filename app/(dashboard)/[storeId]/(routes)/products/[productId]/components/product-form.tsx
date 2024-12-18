@@ -427,7 +427,11 @@ const ProductForm = ({ initialData, categories, kitchens, cuisines, sizes }: Pro
 
         console.log("Thực đơn đã được thêm:", response.data);
       } catch (error) {
-        console.error("Lỗi khi thêm thực đơn:", error.response ? error.response.data : error.message);
+        if (axios.isAxiosError(error)) {
+          console.error("Lỗi khi thêm thực đơn:", error.response ? error.response.data : error.message);
+        } else {
+          console.error("Lỗi không xác định:", error);
+        }
       }
     }
   }

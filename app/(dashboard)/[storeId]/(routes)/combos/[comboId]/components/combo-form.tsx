@@ -128,7 +128,7 @@ const ComboForm = ({ initialData, products }: ComboFormProps) => {
     <>
       {open && <AlertModal isOpen={open} onClose={() => setOpen(false)} onConfirm={onDelete} loading={isLoading} />}
       <div className="flex items-center justify-between">
-        <Heading title={title} />
+        <Heading title={title} description={initialData?.description || ""} />
         {initialData && (
           <Button disabled={isLoading} variant="destructive" size="icon" onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4" />
